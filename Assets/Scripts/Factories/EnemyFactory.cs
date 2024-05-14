@@ -2,50 +2,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class EnemyFactory : GenericFactory<Enemy>
 {
-    [SerializeField] private int _Enemies_Per_Round;
+    [SerializeField] private int              enemiesPerRound = 10;
     
-    [SerializeField] private Transform[] _Spawn_Points;
+    [SerializeField] private Transform[]      spawnPoints = null;
 
-    [SerializeField] private float _Start_Spawn_Frequency;
-    [SerializeField] private float _Spawm_Frequency_Step;
-    [SerializeField] private float _Spawm_Frequency_Low_Limit;
+    [SerializeField] private float            startSpawnFrequency = 3f;
+    [SerializeField] private float            spawnFrequencyStep = 0.035f;
+    [SerializeField] private float            spawnFrequencyLowLimit = 0.5f;
     
-    [SerializeField] private Transform _Enemy_Pool_Transform;
+    [SerializeField] private Transform        enemyPoolTransform = null;
     
-    public static event Action<List<Enemy>> _On_List_Changed;
+    public static event Action<List<Enemy>>   OnListChanged = null;
 
-    private static List<Enemy> _Enemies_On_Scene;
+    private static List<Enemy>                enemiesOnScene = null;
     
-    private static List<Enemy> _Enemy_Pool;
+    private static List<Enemy>                enemyPool = null;
 
-    private static int _Enemies_Left_Count;
+    private static int                        enemiesLeftCount = 0;
     
-    private bool _Is_Creating = true;
+    private bool                              isCreating = true;
 
     public void GlobalInit()
     {
-        GameEvents._On_Player_Defeated += StopCreate;
-        GameEvents._On_Player_Won += StopCreate;
+        GameEvents.OnPlayerDefeated += StopCreate;
+        GameEvents.OnPlayerWon += StopCreate;
     }
 
     public void StartCreating()
     {
-        _Enemies_On_Scene = new List<Enemy>();
+        enemiesOnScene = new List<Enemy>();
 
-        _Enemy_Pool = new List<Enemy>();
+        enemyPool = new List<Enemy>();
         
-        _Enemies_Left_Count = SaveLoad._Player_Data._Level * _Enemies_Per_Round;
+        enemiesLeftCount = SaveLoad.playerData.level * enemiesPerRound;
 
         StartCoroutine(EnemyCreating());
     }
 
     private  IEnumerator EnemyCreating()
     {
-        if (_Spawn_Points.Length == 0)
+        if (spawnPoints.Length == 0)
         {
             Debug.LogError("Spawn points list is empty");
             yield break;
@@ -55,57 +56,60 @@ public class EnemyFactory : GenericFactory<Enemy>
         
         yield return new WaitForSeconds(_start_Delay);
         
-        _Is_Creating = true;
+        isCreating = true;
 
-        float _current_Spawn_Frequency = _Start_Spawn_Frequency;
+        float _current_Spawn_Frequency = startSpawnFrequency;
         
-        while (_Is_Creating && _Enemies_Left_Count > 0)
+        while (isCreating && enemiesLeftCount > 0)
         {
-            int _point_Index = Random.Range(0, _Spawn_Points.Length);
+            int _point_Index = Random.Range(0, spawnPoints.Length);
 
-            Transform _spawn_Point = _Spawn_Points[_point_Index];
+            Transform _spawn_Point = spawnPoints[_point_Index];
 
-            Enemy _enemy = ObjectPool.PoolInstantiate(_Prefab, _spawn_Point.position, _spawn_Point.rotation, _Enemy_Pool);
+            Enemy _enemy = ObjectPool.PoolInstantiate(prefab, _spawn_Point.position, _spawn_Point.rotation, enemyPool);
 
-            _Enemies_On_Scene.Add(_enemy);
+            enemiesOnScene.Add(_enemy);
             
             _enemy.transform.SetParent(null);
             
             _enemy.Init(ReturnToPool);
 
-            _Enemies_Left_Count--;
+            enemiesLeftCount--;
 
-            _On_List_Changed?.Invoke(_Enemies_On_Scene);
+            OnListChanged?.Invoke(enemiesOnScene);
+
+            if (_current_Spawn_Frequency - spawnFrequencyStep >= spawnFrequencyLowLimit)
+            {
+                _current_Spawn_Frequency -= spawnFrequencyStep;
+            }
             
-            if (_current_Spawn_Frequency - _Spawm_Frequency_Step >= _Spawm_Frequency_Low_Limit)
-                _current_Spawn_Frequency -= _Spawm_Frequency_Step;
-
             yield return new WaitForSeconds(_current_Spawn_Frequency);
 
             yield return null;
         }
-        
     }
 
     private void ReturnToPool(Enemy _enemy)
     {
-        ObjectPool.ReturnToPool(_enemy, _Enemy_Pool);
+        ObjectPool.ReturnToPool(_enemy, enemyPool);
 
-        _enemy.transform.SetParent(_Enemy_Pool_Transform);
+        _enemy.transform.SetParent(enemyPoolTransform);
         
-        _Enemies_On_Scene.Remove(_enemy);
+        enemiesOnScene.Remove(_enemy);
         
-        _On_List_Changed?.Invoke(_Enemies_On_Scene);
-        
-        if (_Enemies_On_Scene.Count == 0 && _Enemies_Left_Count == 0)
-            GameEvents.OnPlayerWon();
+        OnListChanged?.Invoke(enemiesOnScene);
+
+        if (enemiesOnScene.Count == 0 && enemiesLeftCount == 0)
+        {
+            GameEvents.PlayerWon();
+        }
     }
 
-    private void StopCreate() => _Is_Creating = false;
+    private void StopCreate() => isCreating = false;
     
     private void OnDestroy()
     {
-        GameEvents._On_Player_Defeated -= StopCreate;
-        GameEvents._On_Player_Won -= StopCreate;
+        GameEvents.OnPlayerDefeated -= StopCreate;
+        GameEvents.OnPlayerWon -= StopCreate;
     }
 }

@@ -1,26 +1,30 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerCell : MonoBehaviour
 {
-    [SerializeField] private bool _Is_Empty = true;
-    [SerializeField] private Transform _Spawn_Point;
-
-    [SerializeField] private Tower _Current_Tower;
+    [SerializeField] private bool        isEmpty = true;
     
-    public bool IsEmpty => _Is_Empty;
-    public Transform SpawnPoint => _Spawn_Point;
-    public Tower CurrentTower => _Current_Tower;
+    [SerializeField] private Transform   spawnPoint = null;
+
+    private Tower                        currentTower = null;
+    
+    public bool IsEmpty => isEmpty;
+    
+    public Transform SpawnPoint => spawnPoint;
+    
+    public Tower CurrentTower => currentTower;
 
     public void CleanCell()
     {
-        _Is_Empty = true;
-        _Current_Tower = null;
+        isEmpty = true;
+        currentTower = null;
     }
 
     public void OccupiedCell(Tower _tower)
     {
-        _Is_Empty = false;
-        _Current_Tower = _tower;
+        isEmpty = false;
+        currentTower = _tower;
     }
 }

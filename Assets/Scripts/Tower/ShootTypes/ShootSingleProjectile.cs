@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class ShootSingleProjectile : IShootType
 {
-    private Projectile _Prefab;
+    private Projectile           prefab = null;
     
-    private Transform _Muzzle;
+    private Transform            muzzle = null;
     
-    private List<Projectile> _Projectile_Pool;
+    private List<Projectile>     projectilePool;
 
-    private Action<Projectile> _Return_Action;
+    private Action<Projectile>   returnAction;
     
-    private float _Damage;
+    private float                damage = 0f;
 
     public ShootSingleProjectile(Projectile _prefab, Transform _muzzle, List<Projectile> _pool, Action<Projectile> _return_Action, float _damage)
     {
-        _Prefab = _prefab;
-        _Muzzle = _muzzle;
-        _Projectile_Pool = _pool;
-        _Return_Action = _return_Action;
-        _Damage = _damage;
+        projectilePool = new List<Projectile>();
+        
+        prefab = _prefab;
+        muzzle = _muzzle;
+        projectilePool = _pool;
+        returnAction = _return_Action;
+        damage = _damage;
     }
     
     public void Shoot() => CreateProjectile();
@@ -28,8 +30,8 @@ public class ShootSingleProjectile : IShootType
     public void CreateProjectile()
     {
         Projectile _projectile =
-            ObjectPool.PoolInstantiate(_Prefab, _Muzzle.position, _Muzzle.rotation, _Projectile_Pool);
+            ObjectPool.PoolInstantiate(prefab, muzzle.position, muzzle.rotation, projectilePool);
         
-        _projectile.Init(_Return_Action, _Damage);
+        _projectile.Init(returnAction, damage);
     }
 }

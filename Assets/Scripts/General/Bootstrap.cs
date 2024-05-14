@@ -1,14 +1,20 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Bootstrap : MonoBehaviour
 {
-   [SerializeField] private SaveLoad _Save_Load;
-   [SerializeField] private PlayerRaycast _Player_Raycast;
-   [SerializeField] private EnemyFactory[] _Enemy_Factories;
-   [SerializeField] private TowerFactory _Tower_Factory;
-   [SerializeField] private EnemyDetection _Enemy_Detection;
-   [SerializeField] private TargetingSystem _Targeting_System;
+   [SerializeField] private SaveLoad          saveLoad = null;
+   
+   [SerializeField] private PlayerRaycast     playerRaycast = null;
+   
+   [SerializeField] private EnemyFactory[]    enemyFactories = null;
+   
+   [SerializeField] private TowerFactory      towerFactory = null;
+   
+   [SerializeField] private EnemyDetection    enemyDetection = null;
+   
+   [SerializeField] private TargetingSystem   targetingSystem = null;
    
    private void Awake() => Init();
 
@@ -16,21 +22,29 @@ public class Bootstrap : MonoBehaviour
 
    private void Init()
    {
-      _Save_Load.GlobalInit();
-      _Player_Raycast.GlobalInit();
-      for (int i = 0; i < _Enemy_Factories.Length; i++)
-         _Enemy_Factories[i].GlobalInit();
+      saveLoad.GlobalInit();
+      playerRaycast.GlobalInit();
+
+      enemyDetection.GlobalInit();
       
-      _Tower_Factory.GlobalInit();
-      _Enemy_Detection.GlobalInit();
-      _Targeting_System.GlobalInit();
+      targetingSystem.GlobalInit();
+      
+      for (int i = 0; i < enemyFactories.Length; i++)
+      {
+         enemyFactories[i].GlobalInit();
+      }
+      
+      towerFactory.GlobalInit();
+
    }
 
    private void StartWork()
    {
-      for (int i = 0; i < _Enemy_Factories.Length; i++)
-         _Enemy_Factories[i].StartCreating();
-      
-      _Tower_Factory.StartCreating();
+      for (int i = 0; i < enemyFactories.Length; i++)
+      {
+         enemyFactories[i].StartCreating();
+      }
+
+      towerFactory.StartCreating();
    }
 }

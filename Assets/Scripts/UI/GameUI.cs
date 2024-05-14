@@ -3,51 +3,55 @@ using Doozy.Runtime.Reactor;
 using Doozy.Runtime.UIManager.Components;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameUI : MonoBehaviour
 {
-    [SerializeField] private DefeatWindowUI _Defeat_Window;
-    [SerializeField] private VictoryWindowUI _Victory_Window;
-    [SerializeField] private PauseWindowUI _Pause_Window;
+    [SerializeField] private DefeatWindowUI    defeatWindow = null;
     
-    [SerializeField] private UIButton _Pause_Button;
+    [SerializeField] private VictoryWindowUI   victoryWindow = null;
+    
+    [SerializeField] private PauseWindowUI     pauseWindow = null;
+    
+    [SerializeField] private UIButton          pauseButton = null;
 
-    [SerializeField] private TextMeshProUGUI _Current_Level;
-    public UIButton GetPauseButton => _Pause_Button;
+    [SerializeField] private TextMeshProUGUI   currentLevel = null;
+    
+    public UIButton GetPauseButton => pauseButton;
     
     private void Awake()
     {
-        GameEvents._On_Player_Defeated += ShowDefeatWindow;
-        GameEvents._On_Player_Won += ShowVictoryWindow;
+        GameEvents.OnPlayerDefeated += ShowDefeatWindow;
+        GameEvents.OnPlayerWon += ShowVictoryWindow;
     }
 
     private void Start() => ShowCurrentLevel();
 
     private void ShowDefeatWindow()
     {
-        _Defeat_Window.gameObject.SetActive(true);
-        _Defeat_Window.PlayAnimation();
+        defeatWindow.gameObject.SetActive(true);
+        defeatWindow.PlayAnimation();
     }
 
     private void ShowVictoryWindow()
     {
-        _Victory_Window.gameObject.SetActive(true);
-        _Victory_Window.PlayAnimation();
+        victoryWindow.gameObject.SetActive(true);
+        victoryWindow.PlayAnimation();
     }
 
     public void ShowPauseWindow()
     {
-        _Pause_Window.gameObject.SetActive(true);
-        _Pause_Window.PlayAnimation(PlayDirection.Forward);
+        pauseWindow.gameObject.SetActive(true);
+        pauseWindow.PlayAnimation(PlayDirection.Forward);
     }
 
-    private void ShowCurrentLevel() => _Current_Level.text = $"Level: {SaveLoad._Player_Data._Level}";
+    private void ShowCurrentLevel() => currentLevel.text = $"Level: {SaveLoad.playerData.level}";
 
-    public void HidePauseWindow() => _Pause_Window.PlayAnimation(PlayDirection.Reverse);
+    public void HidePauseWindow() => pauseWindow.PlayAnimation(PlayDirection.Reverse);
 
     private void OnDestroy()
     {
-        GameEvents._On_Player_Defeated -= ShowDefeatWindow;
-        GameEvents._On_Player_Won -= ShowVictoryWindow;
+        GameEvents.OnPlayerDefeated -= ShowDefeatWindow;
+        GameEvents.OnPlayerWon -= ShowVictoryWindow;
     }
 }

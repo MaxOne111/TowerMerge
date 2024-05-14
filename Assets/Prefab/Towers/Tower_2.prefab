@@ -334,27 +334,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebef5fbce9e94c44af662942d2c803d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Config: {fileID: 11400000, guid: b5c2aef2720589849bf50550c1b519b2, type: 2}
-  _Damage: 20
-  _Fire_Rate: 1.5
-  _Rotation_Speed: 15
-  _Shoot_Point: {fileID: 7480123408978696156}
-  _Muzzle: {fileID: 8725287182005773999}
-  _Head: {fileID: 1964862975897918621}
-  _Shake_Scale:
-    _Duration: 0.75
-    _Strenghth: {x: 0.2, y: 0.2, z: 0.2}
-    _Vibrato: 7
-    _Randomness: 45
-    _Fade_Out: 1
-  _Appearance_Particle: {fileID: 2881335797271268942}
-  _Tower_Audio: {fileID: 6944091919364191949}
-  _Muzzle_Punch:
-    _Punch: {x: 0.5, y: 0.5, z: 0}
-    _Duration: 0.35
-    _Vibrato: 0
-    _Elasticity: 0
-  _Prefab: {fileID: 5099163122648619297, guid: d10d3bc2239968747b3baa1fb47c2f26, type: 3}
+  config: {fileID: 11400000, guid: b5c2aef2720589849bf50550c1b519b2, type: 2}
+  damage: 20
+  fireRate: 1.5
+  rotationSpeed: 15
+  shootPoint: {fileID: 7480123408978696156}
+  muzzle: {fileID: 8725287182005773999}
+  head: {fileID: 1964862975897918621}
+  shakeScale:
+    duration: 0.75
+    strength: {x: 0.2, y: 0.2, z: 0.2}
+    vibrato: 7
+    randomness: 45
+    fadeOut: 1
+  appearanceParticles: {fileID: 2881335797271268942}
+  towerAudio: {fileID: 6944091919364191949}
+  muzzlePunch:
+    punch: {x: 1, y: 1, z: 0}
+    duration: 0.35
+    vibrato: 0
+    elasticity: 0
+  projectilePrefab: {fileID: 5099163122648619297, guid: d10d3bc2239968747b3baa1fb47c2f26,
+    type: 3}
 --- !u!114 &6944091919364191949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,7 +368,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31a3329aa704067ab82286612501ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Shoot_Sound: {fileID: 8300000, guid: af66162561d2eed40ad49268cab318bb, type: 3}
+  shootSound: {fileID: 8300000, guid: af66162561d2eed40ad49268cab318bb, type: 3}
+  audioSource: {fileID: 7972007353368839734}
 --- !u!1 &4359165617418292129
 GameObject:
   m_ObjectHideFlags: 0

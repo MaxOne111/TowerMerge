@@ -1,16 +1,18 @@
 ﻿using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DefeatWindowUI : MonoBehaviour
 {
-    [SerializeField] private UIButton _Restart_Button;
-    [SerializeField] private UIButton _Quit_Button;
+    [SerializeField] private UIButton     restartButton = null;
+    [SerializeField] private UIButton     quitButton = null;
 
-    [SerializeField] private UIAnimator _Animator;
+    [SerializeField] private UIAnimator   animator = null;
 
-    public void PlayAnimation() => _Animator.Play();
+    public void PlayAnimation() => animator.Play();
 
-    public UIButton GetRestartButton => _Restart_Button;
-    public UIButton GetQuitButton => _Quit_Button;
+    public UIButton GetRestartButton => restartButton;
+    
+    public UIButton GetQuitButton => quitButton;
 }

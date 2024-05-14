@@ -6,13 +6,16 @@ public static class ObjectPool
     private static Transform FreeObject(Transform _pool)
     {
         if (_pool.childCount == 0)
+        {
             return null;
-        
+        }
         
         for (int i = 0; i < _pool.childCount; i++)
         {
             if (_pool.GetChild(i))
+            {
                 return _pool.GetChild(i);
+            }
         }
 
         return null;
@@ -21,13 +24,16 @@ public static class ObjectPool
     private static T FreeObject<T>(List<T> _pool) where T : MonoBehaviour
     {
         if (_pool.Count == 0)
+        {
             return null;
-        
+        }
         
         for (int i = 0; i < _pool.Count; i++)
         {
             if (_pool[i])
+            {
                 return _pool[i];
+            }
         }
 
         return null;

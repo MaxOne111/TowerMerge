@@ -2,26 +2,27 @@
 
 public class SaveLoad : MonoBehaviour
 {
-    public static PlayerData _Player_Data;
+    public static PlayerData playerData = null;
     
     public void GlobalInit()
     {
-        _Player_Data = new PlayerData();
+        playerData = new PlayerData();
         
         Load();
 
-        GameEvents._On_Player_Won += LevelUp;
+        GameEvents.OnPlayerWon += LevelUp;
     }
 
-    private void Load() => _Player_Data.LoadData();
+    private void Load() => playerData.LoadData();
 
-    private void Save() => _Player_Data.SaveData();
+    private void Save() => playerData.SaveData();
     
     private void LevelUp()
     {
-        _Player_Data._Level++;
+        playerData.level++;
+        
         Save();
     }
 
-    private void OnDestroy() => GameEvents._On_Player_Won -= LevelUp;
+    private void OnDestroy() => GameEvents.OnPlayerWon -= LevelUp;
 }

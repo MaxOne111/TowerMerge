@@ -3,45 +3,46 @@ using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Doozy.Runtime.UIManager;
+using UnityEngine.Serialization;
 
 public class RestartGame : MonoBehaviour
 {
-    [SerializeField] private DefeatWindowUI _Defeat_Window;
+    [SerializeField] private DefeatWindowUI    defeatWindow = null;
     
-    [SerializeField] private VictoryWindowUI _Victory_Window;
+    [SerializeField] private VictoryWindowUI   victoryWindow = null;
     
-    private readonly string _Scene_Name = "Game";
+    private readonly string                    sceneName = "Game";
     
-    private UIButton _Restart;
-    private UIButton _Continue;
-    private UIButton _Defeat_Quit;
-    private UIButton _Victory_Quit;
+    private UIButton                           restart = null;
+    private UIButton                           _continue = null;
+    private UIButton                           defeat_Quit = null;
+    private UIButton                           victory_Quit = null;
     
     private void Awake()
     {
-        _Restart = _Defeat_Window.GetRestartButton;
-        _Continue = _Victory_Window.GetContinueButton;
+        restart = defeatWindow.GetRestartButton;
+        _continue = victoryWindow.GetContinueButton;
         
-        _Defeat_Quit = _Defeat_Window.GetQuitButton;
-        _Victory_Quit = _Victory_Window.GetQuitButton;
+        defeat_Quit = defeatWindow.GetQuitButton;
+        victory_Quit = victoryWindow.GetQuitButton;
         
-        _Restart.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Restart);
-        _Continue.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Restart);
+        restart.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Restart);
+        _continue.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Restart);
         
-        _Defeat_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Quit);
-        _Victory_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Quit);
+        defeat_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Quit);
+        victory_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.AddListener(Quit);
     }
 
-    private void Restart() => SceneManager.LoadScene(_Scene_Name);
+    private void Restart() => SceneManager.LoadScene(sceneName);
 
     private void Quit() => Application.Quit();
 
     private void OnDestroy()
     {
-        _Restart.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Restart);
-        _Continue.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Restart);
+        restart.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Restart);
+        _continue.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Restart);
         
-        _Defeat_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Quit);
-        _Victory_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Quit);
+        defeat_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Quit);
+        victory_Quit.behaviours.AddBehaviour(UIBehaviour.Name.PointerClick).Event.RemoveListener(Quit);
     }
 }

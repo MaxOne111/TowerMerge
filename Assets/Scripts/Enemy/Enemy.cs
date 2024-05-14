@@ -4,36 +4,36 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField] private float _Start_Health;
-    [SerializeField] private float _Movement_Speed;
+    [SerializeField] private float            startHealth = 50;
+    [SerializeField] private float            movementSpeed = 1.25f;
 
-    [SerializeField] private ParticleSystem _Damage_Particle;
-    [SerializeField] private ParticleSystem _Death_Particle;
+    [SerializeField] private ParticleSystem   damageParticle = null;
+    [SerializeField] private ParticleSystem   deathParticle;
     
-    private event Action<Enemy> _On_Killed;
+    private event Action<Enemy>               OnKilled = null;
 
-    private Transform _Transform;
+    private Transform                         _transform = null;
 
-    private float _Current_Health;
+    private float                             currentHealth = 50;
 
-    private bool _Is_Moving = true;
+    private bool                              isMoving = true;
 
-    private Vector3 _Death_Particle_Position;
+    private Vector3                           deathParticlePosition;
 
     private void Awake()
     {
-        _Transform = transform;
+        _transform = transform;
         
-        _Death_Particle_Position = _Death_Particle.transform.localPosition;
+        deathParticlePosition = deathParticle.transform.localPosition;
 
-        GameEvents._On_Player_Defeated += StopMove;
+        GameEvents.OnPlayerDefeated += StopMove;
     }
 
     private void OnEnable()
     {
-        _Death_Particle.transform.SetParent(_Transform);
+        deathParticle.transform.SetParent(_transform);
         
-        _Death_Particle.transform.localPosition = _Death_Particle_Position;
+        deathParticle.transform.localPosition = deathParticlePosition;
     }
 
 
@@ -41,20 +41,20 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         Vector3 _direction = Vector3.forward;
 
-        while (_Is_Moving)
+        while (isMoving)
         {
-            _Transform.Translate(_direction * _Movement_Speed * Time.deltaTime);
+            _transform.Translate(_direction * movementSpeed * Time.deltaTime);
 
             yield return null;
         }
     }
 
-    private void StopMove() => _Is_Moving = false;
+    private void StopMove() => isMoving = false;
 
     public void Init(Action<Enemy> _action)
     {
-        _On_Killed += _action;
-        _Current_Health = _Start_Health;
+        OnKilled += _action;
+        currentHealth = startHealth;
         
         StartCoroutine(Move());
     }
@@ -62,26 +62,28 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(float _damage)
     {
         if (_damage < 0)
-            return;
-
-        if (_damage >= _Current_Health)
         {
-            _Current_Health = 0;
+            return;
+        }
+        
+        if (_damage >= currentHealth)
+        {
+            currentHealth = 0;
             Death();
         }
 
-        _Current_Health -= _damage;
+        currentHealth -= _damage;
         
-        _Damage_Particle.gameObject.SetActive(false);
-        _Damage_Particle.gameObject.SetActive(true);
+        damageParticle.gameObject.SetActive(false);
+        damageParticle.gameObject.SetActive(true);
     }
 
     private void Death()
     {
-        _Death_Particle.transform.SetParent(null);
-        _Death_Particle.gameObject.SetActive(true);
+        deathParticle.transform.SetParent(null);
+        deathParticle.gameObject.SetActive(true);
         
-        _On_Killed?.Invoke(this);
+        OnKilled?.Invoke(this);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -89,11 +91,11 @@ public class Enemy : MonoBehaviour, IDamageable
         if (other.CompareTag("Finish"))
         {
             StopMove();
-            GameEvents.OnPlayerDefeated();
+            GameEvents.PlayerDefeated();
         }
     }
 
-    private void OnDisable() => _On_Killed = null;
+    private void OnDisable() => OnKilled = null;
 
-    private void OnDestroy() => GameEvents._On_Player_Defeated -= StopMove;
+    private void OnDestroy() => GameEvents.OnPlayerDefeated -= StopMove;
 }

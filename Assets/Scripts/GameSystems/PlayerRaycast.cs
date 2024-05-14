@@ -1,108 +1,127 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerRaycast : MonoBehaviour
 {
-    [SerializeField] private MergeSystem _Merge_System;
+   [SerializeField] private MergeSystem   mergeSystem = null;
 
-    [SerializeField] private LayerMask _Player_Field;
-    [SerializeField] private LayerMask _Player_Cell;
+    [SerializeField] private LayerMask    playerFieldLayer = 6;
+    [SerializeField] private LayerMask    playerCellLayer = 7;
     
-    private Tower _Current_Tower;
-    private PlayerCell _Last_Cell;
+    private Tower        currentTower = null;
     
-    private Ray _Ray;
-    private RaycastHit _Hit;
+    private PlayerCell   lastCell = null;
     
-    private Camera _Camera;
+    private Ray          ray;
+    
+    private RaycastHit   hit;
+    
+    private Camera       _camera = null;
 
     public void GlobalInit()
     {
-        _Camera = Camera.main;
+        _camera = Camera.main;
 
-        GameEvents._On_Player_Defeated += DisableRaycast;
-        GameEvents._On_Player_Won += DisableRaycast;
+        GameEvents.OnPlayerDefeated += DisableRaycast;
+        GameEvents.OnPlayerWon += DisableRaycast;
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
+        {
             SelectTower();
-
+        }
+        
         if (Input.GetMouseButton(0))
+        {
             MoveTower();
-
+        }
+        
         if (Input.GetMouseButtonUp(0))
+        {
             PutTower();
+        }
     }
     
     private void SelectTower()
     {
-        _Ray = _Camera.ScreenPointToRay(Input.mousePosition);
+        ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(_Ray, out _Hit, 100))
+        if (Physics.Raycast(ray, out hit, 100))
         {
-            if (_Hit.collider.TryGetComponent(out Tower _tower))
+            if (hit.collider.TryGetComponent(out Tower _tower))
             {
-                _Current_Tower = _tower;
-                _Current_Tower.Deactivate();
-                _Last_Cell = _tower.Cell;
-            }
+                currentTower = _tower;
+                currentTower.Deactivate();
                 
+                lastCell = _tower.Cell;
+            }
         }
     }
     
     private void MoveTower()
     {
-        _Ray = _Camera.ScreenPointToRay(Input.mousePosition);
+        ray = _camera.ScreenPointToRay(Input.mousePosition);
         
-        if (Physics.Raycast(_Ray, out _Hit, 100, _Player_Field))
+        if (Physics.Raycast(ray, out hit, 100, playerFieldLayer))
         {
-            if (!_Current_Tower)
+            if (!currentTower)
+            {
                 return;
-                
-            _Current_Tower.transform.position = new Vector3(_Hit.point.x, _Current_Tower.transform.position.y, _Hit.point.z);
+            }
+            
+            currentTower.transform.position = new Vector3(hit.point.x, currentTower.transform.position.y, hit.point.z);
         }
-
     }
 
     private void PutTower()
     {
-        if (!_Current_Tower)
-            return;
-        
-        _Ray = _Camera.ScreenPointToRay(Input.mousePosition);
-        
-        if (Physics.Raycast(_Ray, out _Hit, 100, _Player_Cell))
+        if (!currentTower)
         {
-            if (_Hit.transform.TryGetComponent(out PlayerCell _cell))
+            return;
+        }
+        
+        ray = _camera.ScreenPointToRay(Input.mousePosition);
+        
+        if (Physics.Raycast(ray, out hit, 100, playerCellLayer))
+        {
+            if (hit.transform.TryGetComponent(out PlayerCell _cell))
             {
                 if (_cell.IsEmpty)
                 {
-                    _Current_Tower.transform.position = _cell.SpawnPoint.position;
-                    OccupiedCell(_Current_Tower ,_cell);
+                    currentTower.transform.position = _cell.SpawnPoint.position;
+                    
+                    OccupiedCell(currentTower ,_cell);
                 }
                 else
                 {
-                    if (_Current_Tower.Level == _cell.CurrentTower.Level && _Current_Tower != _cell.CurrentTower && !_Current_Tower.IsMaxLevel)
+                    if (currentTower.Level == _cell.CurrentTower.Level && currentTower != _cell.CurrentTower && !currentTower.IsMaxLevel)
                     {
-                        Tower _new_Tower = _Merge_System.Merge(_Current_Tower, _cell.CurrentTower, _Current_Tower.NextTower, _cell);
+                        Tower _new_Tower = mergeSystem.Merge(currentTower, _cell.CurrentTower, currentTower.NextTower, _cell);
                         
                         OccupiedCell(_new_Tower ,_cell);
                     }
                     else
-                        _Current_Tower.transform.position = _Last_Cell.SpawnPoint.position;
+                    {
+                        currentTower.transform.position = lastCell.SpawnPoint.position;
+                    }
                 }
-                    
             }
         }
         else
-            _Current_Tower.transform.position = _Last_Cell.SpawnPoint.position;
-
-        if (_Current_Tower)
-            _Current_Tower.Activate();
+        {
+            currentTower.transform.position = lastCell.SpawnPoint.position;
+        }
         
-        _Current_Tower = null;
-        _Last_Cell = null;
+        if (currentTower)
+        {
+            currentTower.Activate();
+        }
+        
+        currentTower = null;
+        
+        lastCell = null;
     }
     
     private void DisableRaycast() => gameObject.SetActive(false);
@@ -110,14 +129,16 @@ public class PlayerRaycast : MonoBehaviour
     private void OccupiedCell(Tower _tower ,PlayerCell _cell)
     {
         _cell.OccupiedCell(_tower);
+        
         _tower.OccupiedCell(_cell);
-        _Last_Cell.CleanCell();
+        
+        lastCell.CleanCell();
     }
     
     private void OnDestroy()
     {
-        GameEvents._On_Player_Defeated -= DisableRaycast;
-        GameEvents._On_Player_Won -= DisableRaycast;
+        GameEvents.OnPlayerDefeated -= DisableRaycast;
+        GameEvents.OnPlayerWon -= DisableRaycast;
     }
     
 }

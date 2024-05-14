@@ -2603,10 +2603,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27eef5444fb40aaa6934b1293cae439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Start_Health: 150
-  _Movement_Speed: 0.75
-  _Damage_Particle: {fileID: 154929027164774715}
-  _Death_Particle: {fileID: 6130124688772816880}
+  startHealth: 150
+  movementSpeed: 0.75
+  damageParticle: {fileID: 154929027164774715}
+  deathParticle: {fileID: 6130124688772816880}
 --- !u!114 &1943766832054163528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2619,6 +2619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d91a46a82440079bc6bb17cbce70f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 9058693817256166896}
 --- !u!136 &7131950887337848245
 CapsuleCollider:
   m_ObjectHideFlags: 0

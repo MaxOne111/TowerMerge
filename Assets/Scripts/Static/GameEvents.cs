@@ -2,9 +2,10 @@
 
 public static class GameEvents
 {
-    public static Action _On_Player_Defeated;
-    public static Action _On_Player_Won;
+    public static event Action OnPlayerDefeated = null;
+    public static event Action OnPlayerWon = null;
 
-    public static void OnPlayerDefeated() => _On_Player_Defeated?.Invoke();
-    public static void OnPlayerWon() => _On_Player_Won?.Invoke();
+    public static void PlayerDefeated() => OnPlayerDefeated?.Invoke();
+    
+    public static void PlayerWon() => OnPlayerWon?.Invoke();
 }

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1daa700021e24e87ab903f6b5987c903, type: 3}
   m_Name: Tower_3
   m_EditorClassIdentifier: 
-  _Level: 3
-  _Next_Tower: {fileID: 0}
-  _Is_Max_Level: 1
+  level: 3
+  nextTower: {fileID: 0}
+  isMaxLevel: 1

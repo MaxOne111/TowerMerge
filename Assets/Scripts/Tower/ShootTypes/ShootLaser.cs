@@ -2,55 +2,59 @@
 
 public class ShootLaser : IShootType
 {
-    private Transform _Shoot_Point;
+    private Transform      shootPoint = null;
 
-    private LineRenderer _Line_Renderer;
+    private LineRenderer   lineRenderer = null;
 
-    public Transform _Target;
+    private Transform      target = null;
 
-    private Ray _Ray;
-    private RaycastHit _Hit;
+    private Ray            ray;
+    private RaycastHit     hit;
 
-    private float _Damage;
-    
-    Vector3 _Zero = Vector3.zero;
+    private float          damage = 0f;
+
+    private Vector3        zeroPosition;
 
     public ShootLaser(Transform _shoot_Point, Transform _target , LineRenderer _line_Renderer, float _damage)
     {
-        _Shoot_Point = _shoot_Point;
-        _Target = _target;
-        _Line_Renderer = _line_Renderer;
-        _Damage = _damage;
+        zeroPosition = Vector3.zero;
+        
+        shootPoint = _shoot_Point;
+        target = _target;
+        lineRenderer = _line_Renderer;
+        damage = _damage;
     }
     
     
     public void Shoot()
     {
-        Vector3 _direction = _Shoot_Point.forward;
+        Vector3 _direction = shootPoint.forward;
         
-        _Ray = new Ray(_Shoot_Point.position, _direction);
+        ray = new Ray(shootPoint.position, _direction);
         
-        if (Physics.Raycast(_Ray, out _Hit))
+        if (Physics.Raycast(ray, out hit))
         {
-            if (_Hit.collider.TryGetComponent(out Enemy _enemy))
-                _enemy.TakeDamage(_Damage);
+            if (hit.collider.TryGetComponent(out Enemy _enemy))
+            {
+                _enemy.TakeDamage(damage);
+            }
         }
     }
 
     public void CreateProjectile()
     {
-        if (!_Target)
+        if (!target)
         {
-            _Line_Renderer.SetPosition(0, _Zero);
-            _Line_Renderer.SetPosition(1, _Zero);
+            lineRenderer.SetPosition(0, zeroPosition);
+            lineRenderer.SetPosition(1, zeroPosition);
             return;
         }
             
         
-        Vector3 _target = new Vector3(_Target.transform.position.x, _Target.transform.position.y + 0.35f,
-            _Target.transform.position.z);
+        Vector3 _target = new Vector3(target.transform.position.x, target.transform.position.y + 0.35f,
+            target.transform.position.z);
 
-        _Line_Renderer.SetPosition(0, _Shoot_Point.position);
-        _Line_Renderer.SetPosition(1, _target);
+        lineRenderer.SetPosition(0, shootPoint.position);
+        lineRenderer.SetPosition(1, _target);
     }
 }

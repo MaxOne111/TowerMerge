@@ -1,32 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnemyDetection : MonoBehaviour
 {
-    [SerializeField] private List<Enemy> _Enemies;
-
-    public static event Action<List<Enemy>> _On_Targets_Ready;
+    public static event Action<List<Enemy>>   OnTargetsReady = null;
     
-    public void GlobalInit() => EnemyFactory._On_List_Changed += DetectEnemy;
+    private List<Enemy>                       enemies = null;
+    
+    public void GlobalInit() => EnemyFactory.OnListChanged += DetectEnemy;
 
     private void DetectEnemy(List<Enemy> _enemies)
     {
-        _Enemies = _enemies;
+        enemies = new List<Enemy>();
+        
+        enemies = _enemies;
 
-        if (_Enemies.Count <= 1)
+        if (enemies.Count <= 1)
         {
-            _On_Targets_Ready?.Invoke(_Enemies);
+            OnTargetsReady?.Invoke(enemies);
             return;
         }
         
-        _Enemies.Sort((x,y)=>x.transform.position.z.CompareTo(y.transform.position.z));
+        enemies.Sort((x,y)=>x.transform.position.z.CompareTo(y.transform.position.z));
         
-        _On_Targets_Ready?.Invoke(_Enemies);
+        OnTargetsReady?.Invoke(enemies);
     }
     
-    private void OnDestroy()
-    {
-        EnemyFactory._On_List_Changed -= DetectEnemy;
-    }
+    private void OnDestroy() => EnemyFactory.OnListChanged -= DetectEnemy;
 }

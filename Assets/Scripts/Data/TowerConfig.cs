@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(menuName = "TowerConfig", fileName = "TowerConfig")]
 public class TowerConfig : ScriptableObject
 {
-    [SerializeField] private int _Level;
-    [SerializeField] private Tower _Next_Tower;
-    [SerializeField] private bool _Is_Max_Level;
+    [SerializeField] private int     level = 1;
+    [SerializeField] private Tower   nextTower = null;
+    [SerializeField] private bool    isMaxLevel = false;
 
-    public int Level => _Level;
-    public Tower NextTower => _Next_Tower;
-    public bool IsMaxLevel => _Is_Max_Level;
+    public int Level => level;
+    
+    public Tower NextTower => nextTower;
+    
+    public bool IsMaxLevel => isMaxLevel;
 }

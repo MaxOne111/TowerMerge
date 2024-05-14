@@ -3,39 +3,41 @@
 [RequireComponent(typeof(AudioSource))]
 public class TowerAudio : MonoBehaviour
 {
-    [SerializeField] private AudioClip _Shoot_Sound;
+    [SerializeField] private AudioClip     shootSound = null;
 
-    private AudioSource _Audio_Source;
+    [SerializeField] private AudioSource   audioSource = null;
 
     private void Awake()
     {
-        _Audio_Source = GetComponent<AudioSource>();
-
-        GameEvents._On_Player_Defeated += StopPlaying;
-        GameEvents._On_Player_Won += StopPlaying;
+        GameEvents.OnPlayerDefeated += StopPlaying;
+        GameEvents.OnPlayerWon += StopPlaying;
     }
 
-    public bool IsPlaying() => _Audio_Source.isPlaying;
+    public bool IsPlaying() => audioSource.isPlaying;
 
     public void PlayShootSound()
     {
-        if (!_Audio_Source.enabled)
+        if (!audioSource.enabled)
+        {
             return;
-     
-        _Audio_Source.PlayOneShot(_Shoot_Sound);
+        }
+        
+        audioSource.PlayOneShot(shootSound);
     }
 
     public void StopPlaying()
     {
-        if (!_Audio_Source.enabled)
+        if (!audioSource.enabled)
+        {
             return;
-
-        _Audio_Source.Stop();
+        }
+        
+        audioSource.Stop();
     }
 
     private void OnDisable()
     {
-        GameEvents._On_Player_Defeated -= StopPlaying;
-        GameEvents._On_Player_Won -= StopPlaying;
+        GameEvents.OnPlayerDefeated -= StopPlaying;
+        GameEvents.OnPlayerWon -= StopPlaying;
     }
 }

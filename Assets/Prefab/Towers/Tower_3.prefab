@@ -1226,22 +1226,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eace64e8c9e94f19984e2ef79b236dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Config: {fileID: 11400000, guid: 52bc81c86897a394184a0024f85d6e26, type: 2}
-  _Damage: 10
-  _Fire_Rate: 3
-  _Rotation_Speed: 15
-  _Shoot_Point: {fileID: 6831029712661022028}
-  _Muzzle: {fileID: 2151028510758436719}
-  _Head: {fileID: 1964862975897918621}
-  _Shake_Scale:
-    _Duration: 0.75
-    _Strenghth: {x: 0.2, y: 0.2, z: 0.2}
-    _Vibrato: 7
-    _Randomness: 45
-    _Fade_Out: 1
-  _Appearance_Particle: {fileID: 3601948844228825346}
-  _Tower_Audio: {fileID: 7474728789470822429}
-  _Line_Renderer: {fileID: 4539897271230149323}
+  config: {fileID: 11400000, guid: 52bc81c86897a394184a0024f85d6e26, type: 2}
+  damage: 10
+  fireRate: 3
+  rotationSpeed: 15
+  shootPoint: {fileID: 6831029712661022028}
+  muzzle: {fileID: 2151028510758436719}
+  head: {fileID: 1964862975897918621}
+  shakeScale:
+    duration: 0.75
+    strength: {x: 0.2, y: 0.2, z: 0.2}
+    vibrato: 7
+    randomness: 45
+    fadeOut: 1
+  appearanceParticles: {fileID: 3601948844228825346}
+  towerAudio: {fileID: 7474728789470822429}
+  lineRenderer: {fileID: 4539897271230149323}
 --- !u!114 &7474728789470822429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1254,7 +1254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31a3329aa704067ab82286612501ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Shoot_Sound: {fileID: 8300000, guid: 42df762e90a769f4690050331b361891, type: 3}
+  shootSound: {fileID: 8300000, guid: 42df762e90a769f4690050331b361891, type: 3}
+  audioSource: {fileID: 7972007353368839734}
 --- !u!1 &4176020368314372757
 GameObject:
   m_ObjectHideFlags: 0

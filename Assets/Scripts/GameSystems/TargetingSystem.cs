@@ -1,69 +1,77 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class TargetingSystem : MonoBehaviour
 {
-    [SerializeField] private List<Tower> _Towers;
-    [SerializeField] private List<Enemy> _Targets;
+    private List<Tower>   towers = new List<Tower>();
+    private List<Enemy>   targets = new List<Enemy>();
     
     public void GlobalInit()
     {
-        EnemyDetection._On_Targets_Ready += GetTargets;
-        TowerFactory._On_List_Changed += TowersUpdate;
+        EnemyDetection.OnTargetsReady += GetTargets;
+        TowerFactory.OnListChanged += TowersUpdate;
     }
 
     private void GetTargets(List<Enemy> _targets)
     {
-        _Targets = _targets;
+        targets = _targets;
         
         TowerTargets();
     }
 
     private void TowersUpdate(List<Tower> _towers)
     {
-        _Towers = _towers;
+        towers = _towers;
         
         TowerTargets();
     }
 
     private void TowerTargets()
     {
-        if (_Towers.Count == 0)
-            return;
-
-        if (_Targets.Count == 0)
+        if (towers.Count == 0)
         {
-            for (int i = 0; i < _Towers.Count; i++)
-                _Towers[i].Target = null;
+            return;
+        }
+        
+        if (targets.Count == 0)
+        {
+            for (int i = 0; i < towers.Count; i++)
+            {
+                towers[i].Target = null;
+            }
             
             return;
         }
         
-        if (_Towers.Count > _Targets.Count)
+        if (towers.Count > targets.Count)
         {
-            int i = _Towers.Count - 1;
+            int i = towers.Count - 1;
             int j = 0;
             while (i >= 0)
             {
-                _Towers[i].Target = _Targets[j].transform;
+                towers[i].Target = targets[j].transform;
                 i--;
                 j++;
 
-                if (j >= _Targets.Count - 1)
+                if (j >= targets.Count - 1)
+                {
                     j = 0;
+                }
             }
             
             return;
         }
 
-        for (int i = 0; i < _Towers.Count; i++)
-            _Towers[i].Target = _Targets[i].transform;
+        for (int i = 0; i < towers.Count; i++)
+        {
+            towers[i].Target = targets[i].transform;
+        }
     }
-    
     
     private void OnDestroy()
     {
-        EnemyDetection._On_Targets_Ready -= GetTargets;
-        TowerFactory._On_List_Changed -= TowersUpdate;
+        EnemyDetection.OnTargetsReady -= GetTargets;
+        TowerFactory.OnListChanged -= TowersUpdate;
     }
 }

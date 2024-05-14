@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d0a3c4f5c944e99b41155102e8bf4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 3274497215080228525, guid: e07353f66858c584485ea1fc11a2c89f, type: 3}
-  _Player_Cells:
+  prefab: {fileID: 3274497215080228525, guid: e07353f66858c584485ea1fc11a2c89f, type: 3}
+  playerCells:
   - {fileID: 102139908}
   - {fileID: 144367497}
   - {fileID: 1066805017}
@@ -179,9 +179,10 @@ MonoBehaviour:
   - {fileID: 1074937407}
   - {fileID: 397770209}
   - {fileID: 923919317}
-  _Projectile_Pool: {fileID: 749329420}
-  _Spawn_Frequency: 3
-  _Tower_Sound: {fileID: 8300000, guid: d5818975f44f67f4b956ecc5c7f061db, type: 3}
+  projectilePool: {fileID: 749329420}
+  spawnFrequency: 3
+  towerSound: {fileID: 8300000, guid: d5818975f44f67f4b956ecc5c7f061db, type: 3}
+  audioSource: {fileID: 3423813}
 --- !u!82 &3423813
 AudioSource:
   m_ObjectHideFlags: 0
@@ -356,16 +357,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d0c002b37c4b1e99a47911ede210b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 3727273312034044682, guid: 1f349d7f99772d843a007172a9fdf907, type: 3}
-  _Enemies_Per_Round: 10
-  _Spawn_Points:
+  prefab: {fileID: 3727273312034044682, guid: 1f349d7f99772d843a007172a9fdf907, type: 3}
+  enemiesPerRound: 10
+  spawnPoints:
   - {fileID: 560597189}
   - {fileID: 1113343356}
   - {fileID: 1693050980}
-  _Start_Spawn_Frequency: 5
-  _Spawm_Frequency_Step: 0.035
-  _Spawm_Frequency_Low_Limit: 0.5
-  _Enemy_Pool_Transform: {fileID: 1827114565}
+  startSpawnFrequency: 5
+  spawnFrequencyStep: 0.035
+  spawnFrequencyLowLimit: 0.5
+  enemyPoolTransform: {fileID: 1827114565}
 --- !u!4 &102139907 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1617094083792494908, guid: d42abc5bf34e5cc44b23b67cd52161a6,
@@ -719,7 +720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee1374b8f8df43e3bec4aa67be13dd3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Tower_Factory: {fileID: 3423812}
+  towerFactory: {fileID: 3423812}
 --- !u!1 &279604218
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,11 +765,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efcb76c16e82411d91f880467eb5adea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Merge_System: {fileID: 263264897}
-  _Player_Field:
+  mergeSystem: {fileID: 263264897}
+  playerFieldLayer:
     serializedVersion: 2
     m_Bits: 64
-  _Player_Cell:
+  playerCellLayer:
     serializedVersion: 2
     m_Bits: 128
 --- !u!1 &305229037
@@ -1001,8 +1002,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4004e0cb3653431db900d04da64bf483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Towers: []
-  _Targets: []
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3287,7 +3286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdcb88c5abf4482a7abc23f24467b71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Enemies: []
 --- !u!1 &544543583
 GameObject:
   m_ObjectHideFlags: 0
@@ -3332,8 +3330,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b8dddc68ee4b45b386ea160fdccf85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Game_UI: {fileID: 1699856558}
-  _Pause_Window: {fileID: 1854880233}
+  gameUI: {fileID: 1699856558}
+  pauseWindow: {fileID: 1854880233}
 --- !u!1 &551546501
 GameObject:
   m_ObjectHideFlags: 0
@@ -3579,16 +3577,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d0c002b37c4b1e99a47911ede210b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 5012003215308906769, guid: bf0fc921c07550f46b8fcef4714fa476, type: 3}
-  _Enemies_Per_Round: 10
-  _Spawn_Points:
+  prefab: {fileID: 5012003215308906769, guid: bf0fc921c07550f46b8fcef4714fa476, type: 3}
+  enemiesPerRound: 10
+  spawnPoints:
   - {fileID: 560597189}
   - {fileID: 1113343356}
   - {fileID: 1693050980}
-  _Start_Spawn_Frequency: 4
-  _Spawm_Frequency_Step: 0.035
-  _Spawm_Frequency_Low_Limit: 0.5
-  _Enemy_Pool_Transform: {fileID: 1827114565}
+  startSpawnFrequency: 4
+  spawnFrequencyStep: 0.035
+  spawnFrequencyLowLimit: 0.5
+  enemyPoolTransform: {fileID: 1827114565}
 --- !u!1 &728053347
 GameObject:
   m_ObjectHideFlags: 0
@@ -3664,8 +3662,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da49414942b8490c94b1f2815fb937c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Pool: []
-  _Pool_Transform: {fileID: 1586762898}
+  pool: []
+  poolTransform: {fileID: 1586762898}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4515,8 +4513,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b53152a6cb401baa1a471ad26d7d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Defeat_Window: {fileID: 1799265998}
-  _Victory_Window: {fileID: 1968573043}
+  defeatWindow: {fileID: 1799265998}
+  victoryWindow: {fileID: 1968573043}
 --- !u!4 &1066805016 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1617094083792494908, guid: d42abc5bf34e5cc44b23b67cd52161a6,
@@ -5112,16 +5110,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95d0c002b37c4b1e99a47911ede210b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 1690574782777728471, guid: c83acc171b6f80c48864bd1d75f469eb, type: 3}
-  _Enemies_Per_Round: 10
-  _Spawn_Points:
+  prefab: {fileID: 1690574782777728471, guid: c83acc171b6f80c48864bd1d75f469eb, type: 3}
+  enemiesPerRound: 10
+  spawnPoints:
   - {fileID: 560597189}
   - {fileID: 1113343356}
   - {fileID: 1693050980}
-  _Start_Spawn_Frequency: 3
-  _Spawm_Frequency_Step: 0.035
-  _Spawm_Frequency_Low_Limit: 0.5
-  _Enemy_Pool_Transform: {fileID: 1827114565}
+  startSpawnFrequency: 3
+  spawnFrequencyStep: 0.035
+  spawnFrequencyLowLimit: 0.5
+  enemyPoolTransform: {fileID: 1827114565}
 --- !u!1 &1321283697
 GameObject:
   m_ObjectHideFlags: 0
@@ -12756,11 +12754,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c30fe479ed4cbb97c7e6f073e05ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Defeat_Window: {fileID: 1799265998}
-  _Victory_Window: {fileID: 1968573043}
-  _Pause_Window: {fileID: 1854880233}
-  _Pause_Button: {fileID: 1530243046}
-  _Current_Level: {fileID: 1791670116}
+  defeatWindow: {fileID: 1799265998}
+  victoryWindow: {fileID: 1968573043}
+  pauseWindow: {fileID: 1854880233}
+  pauseButton: {fileID: 1530243046}
+  currentLevel: {fileID: 1791670116}
 --- !u!1001 &1741206866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12913,15 +12911,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b1724517fb44e2b5d6556120b567b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Save_Load: {fileID: 1867002755}
-  _Player_Raycast: {fileID: 279604220}
-  _Enemy_Factories:
+  saveLoad: {fileID: 1867002755}
+  playerRaycast: {fileID: 279604220}
+  enemyFactories:
   - {fileID: 1288915326}
   - {fileID: 647464618}
   - {fileID: 32844910}
-  _Tower_Factory: {fileID: 3423812}
-  _Enemy_Detection: {fileID: 471232790}
-  _Targeting_System: {fileID: 407339111}
+  towerFactory: {fileID: 3423812}
+  enemyDetection: {fileID: 471232790}
+  targetingSystem: {fileID: 407339111}
 --- !u!1 &1791670114
 GameObject:
   m_ObjectHideFlags: 0
@@ -13145,9 +13143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97cdcedd2b864b36b64048a0b5aed938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Restart_Button: {fileID: 1845805152}
-  _Quit_Button: {fileID: 444102043}
-  _Animator: {fileID: 1579606513}
+  restartButton: {fileID: 1845805152}
+  quitButton: {fileID: 444102043}
+  animator: {fileID: 1579606513}
 --- !u!1 &1813645128
 GameObject:
   m_ObjectHideFlags: 0
@@ -15495,9 +15493,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b682206c9b3e42d984f2ba0854dbd6a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Play: {fileID: 1565334509}
-  _Quit_Button: {fileID: 1468077353}
-  _Animator: {fileID: 838337279}
+  play: {fileID: 1565334509}
+  quitButton: {fileID: 1468077353}
+  animator: {fileID: 838337279}
 --- !u!1 &1862912795
 GameObject:
   m_ObjectHideFlags: 0
@@ -17949,9 +17947,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c5bffb0d284f3a8e7a26fa48f50064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Continue_Button: {fileID: 1953188066}
-  _Quit_Button: {fileID: 2077055436}
-  _Animator: {fileID: 1682203733}
+  continueButton: {fileID: 1953188066}
+  quitButton: {fileID: 2077055436}
+  animator: {fileID: 1682203733}
 --- !u!1001 &2039312898
 PrefabInstance:
   m_ObjectHideFlags: 0

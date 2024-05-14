@@ -1,20 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class EnemyAnimation : MonoBehaviour
 {
-    private Animator _Animator;
+    [SerializeField] private Animator animator;
 
-    private void Awake()
-    {
-        _Animator = GetComponent<Animator>();
+    private void Awake() => GameEvents.OnPlayerDefeated += Idle;
 
-        GameEvents._On_Player_Defeated += Idle;
-    }
+    private void Run() => animator.SetBool("IsRunning", true);
     
-    private void Run() => _Animator.SetBool("IsRunning", true);
-    private void Idle() => _Animator.SetBool("IsRunning", false);
+    private void Idle() => animator.SetBool("IsRunning", false);
 
-    private void OnDestroy() => GameEvents._On_Player_Defeated -= Idle;
+    private void OnDestroy() => GameEvents.OnPlayerDefeated -= Idle;
 }

@@ -2,34 +2,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(AudioSource))]
 public class TowerFactory : GenericFactory<Tower>
 {
-    [SerializeField] private List<PlayerCell> _Player_Cells;
+    [SerializeField] private List<PlayerCell>   playerCells = null;
 
-    [SerializeField] private ProjectilePool _Projectile_Pool;
+    [SerializeField] private ProjectilePool     projectilePool = null;
     
-    [SerializeField] private float _Spawn_Frequency;
+    [SerializeField] private float              spawnFrequency = 3f;
 
-    [SerializeField] private AudioClip _Tower_Sound;
+    [SerializeField] private AudioClip          towerSound = null;
 
-    public static event Action<List<Tower>> _On_List_Changed ;
+    [SerializeField] private AudioSource        audioSource = null;
+    public static event Action<List<Tower>>     OnListChanged = null;
 
-    private List<Tower> _Towers = new List<Tower>();
+    private List<Tower>                         towers = new List<Tower>();
 
-    private PlayerCell _Empty_Cell;
+    private PlayerCell                          emptyCell = null;
     
-    private bool _Is_Creating = true;
-
-    private AudioSource _Audio_Source;
-
-    private void Awake() => _Audio_Source = GetComponent<AudioSource>();
+    private bool                                isCreating = true;
 
     public void GlobalInit()
     {
-        GameEvents._On_Player_Defeated += StopCreate;
-        GameEvents._On_Player_Won += StopCreate;
+        GameEvents.OnPlayerDefeated += StopCreate;
+        GameEvents.OnPlayerWon += StopCreate;
     }
     
     public void StartCreating() => StartCoroutine(TowerCreating());
@@ -38,17 +36,17 @@ public class TowerFactory : GenericFactory<Tower>
     {
         Tower _tower = Instantiate(_prefab ,_cell.SpawnPoint.position, _cell.SpawnPoint.rotation);
             
-        _tower.Init(DestroyTower, _Projectile_Pool.Pool, _Projectile_Pool.PoolTransform);
+        _tower.Init(DestroyTower, projectilePool.Pool, projectilePool.PoolTransform);
             
-        _Towers.Add(_tower);
+        towers.Add(_tower);
             
         _cell.OccupiedCell(_tower);
         
         _tower.OccupiedCell(_cell);
 
-        _On_List_Changed?.Invoke(_Towers);
+        OnListChanged?.Invoke(towers);
         
-        _Audio_Source.PlayOneShot(_Tower_Sound);
+        audioSource.PlayOneShot(towerSound);
 
         return _tower;
     }
@@ -59,24 +57,26 @@ public class TowerFactory : GenericFactory<Tower>
         
         yield return new WaitForSeconds(_start_Delay);
 
-        _Is_Creating = true;
+        isCreating = true;
         
-        while (_Is_Creating)
+        while (isCreating)
         {
-            _Empty_Cell = GetEmptyCell();
+            emptyCell = GetEmptyCell();
 
-            if (!_Empty_Cell)
+            if (!emptyCell)
             {
                 StartCreating();
                 yield break;
             }
 
-            if (!_Is_Creating)
+            if (!isCreating)
+            {
                 yield break;
+            }
             
-            Create(_Prefab , _Empty_Cell);
+            Create(prefab , emptyCell);
             
-            yield return new WaitForSeconds(_Spawn_Frequency);
+            yield return new WaitForSeconds(spawnFrequency);
 
             yield return null;
         }
@@ -84,29 +84,32 @@ public class TowerFactory : GenericFactory<Tower>
 
     private PlayerCell GetEmptyCell()
     {
-        for (int i = 0; i < _Player_Cells.Count; i++)
+        for (int i = 0; i < playerCells.Count; i++)
         {
-            if (_Player_Cells[i].IsEmpty)
-                return _Player_Cells[i];
+            if (playerCells[i].IsEmpty)
+            {
+                return playerCells[i];
+            }
         }
 
         return null;
     }
     
-
     private void DestroyTower(Tower _tower)
     {
-        _Towers.Remove(_tower);
-        _On_List_Changed?.Invoke(_Towers);
+        towers.Remove(_tower);
+        
+        OnListChanged?.Invoke(towers);
+        
         Destroy(_tower.gameObject);
     }
     
-    private void StopCreate() => _Is_Creating = false;
+    private void StopCreate() => isCreating = false;
 
     private void OnDestroy()
     {
-        GameEvents._On_Player_Defeated -= StopCreate;
-        GameEvents._On_Player_Won -= StopCreate;
+        GameEvents.OnPlayerDefeated -= StopCreate;
+        GameEvents.OnPlayerWon -= StopCreate;
     }
     
 }

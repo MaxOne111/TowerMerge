@@ -1,16 +1,18 @@
 ﻿using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class VictoryWindowUI : MonoBehaviour
 {
-    [SerializeField] private UIButton _Continue_Button;
-    [SerializeField] private UIButton _Quit_Button;
+    [SerializeField] private UIButton     continueButton = null;
+    [SerializeField] private UIButton     quitButton = null;
     
-    [SerializeField] private UIAnimator _Animator;
+    [SerializeField] private UIAnimator   animator = null;
 
-    public void PlayAnimation() => _Animator.Play();
+    public void PlayAnimation() => animator.Play();
     
-    public UIButton GetContinueButton => _Continue_Button;
-    public UIButton GetQuitButton => _Quit_Button;
+    public UIButton GetContinueButton => continueButton;
+    
+    public UIButton GetQuitButton => quitButton;
 }

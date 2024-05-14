@@ -2,51 +2,57 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ProjectileTower : Tower
 {
-    [SerializeField] private DOPunch _Muzzle_Punch;
+    [SerializeField] private DOPunch      muzzlePunch;
     
-    [SerializeField] private Projectile _Prefab;
+    [SerializeField] private Projectile   projectilePrefab = null;
     
-    private List<Projectile> _Projectile_Pool;
+    private List<Projectile>              projectilePool = null;
     
-    private Transform _Projectile_Pool_Transform;
+    private Transform                     projectilePoolTransform = null;
     
     public override void Init(Action<Tower> _action, List<Projectile> _pool, Transform _pool_Transform)
     {
+        projectilePool = new List<Projectile>();
+        
         base.Init(_action, _pool, _pool_Transform);
-        _Projectile_Pool = _pool;
-        _Projectile_Pool_Transform = _pool_Transform;
+        
+        projectilePool = _pool;
+        projectilePoolTransform = _pool_Transform;
     }
     
     protected override void Shoot()
     {
         if (!ShootCooldown() || !Target)
+        {
             return;
-        
-        _Shoot_Type = new ShootSingleProjectile(_Prefab, _Shoot_Point, _Projectile_Pool, ReturnProjectileToPool, _Damage);
+        }
+
+        shootType = new ShootSingleProjectile(projectilePrefab, shootPoint, projectilePool, ReturnProjectileToPool, damage);
         
         ShootEffect();
         
-        _Shoot_Type.Shoot();
+        shootType.Shoot();
         
-        _Tower_Audio.PlayShootSound();
+        towerAudio.PlayShootSound();
     }
 
     protected override void ShootEffect()
     {
-        _Muzzle.transform.DOPunchScale(_Muzzle_Punch._Punch,
-                _Muzzle_Punch._Duration,
-                _Muzzle_Punch._Vibrato,
-                _Muzzle_Punch._Elasticity)
-            .SetLink(_Muzzle.gameObject);
+        muzzle.transform.DOPunchScale(muzzlePunch.punch,
+                muzzlePunch.duration,
+                muzzlePunch.vibrato,
+                muzzlePunch.elasticity)
+            .SetLink(muzzle.gameObject);
     }
     
     private void ReturnProjectileToPool(Projectile _projectile)
     {
-        _projectile.transform.SetParent(_Projectile_Pool_Transform);
+        _projectile.transform.SetParent(projectilePoolTransform);
         
-        ObjectPool.ReturnToPool(_projectile, _Projectile_Pool);
+        ObjectPool.ReturnToPool(_projectile, projectilePool);
     }
 }

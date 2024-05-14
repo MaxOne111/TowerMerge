@@ -6,45 +6,61 @@ using UnityEngine;
 
 public abstract class Tower : MonoBehaviour
 {
-    [SerializeField] private TowerConfig _Config;
+    [SerializeField] private TowerConfig      config = null;
     
-    [SerializeField] protected float _Damage;
-
-    [SerializeField] private float _Fire_Rate;
-    [SerializeField] private float _Rotation_Speed;
+    [SerializeField] protected float          damage = 10f;
+    [SerializeField] private float            fireRate = 1f;
+    [SerializeField] private float            rotationSpeed = 15f;
     
-    [SerializeField] protected Transform _Shoot_Point;
-    [SerializeField] protected Transform _Muzzle;
-    [SerializeField] private Transform _Head;
+    [SerializeField] protected Transform      shootPoint = null;
+    [SerializeField] protected Transform      muzzle = null;
+    [SerializeField] private Transform        head = null;
 
-    [SerializeField] private DOShake _Shake_Scale;
+    [SerializeField] private DOShake          shakeScale;
 
-    [SerializeField] private ParticleSystem _Appearance_Particle;
+    [SerializeField] private ParticleSystem   appearanceParticles = null;
 
-    [SerializeField] protected TowerAudio _Tower_Audio;
+    [SerializeField] protected TowerAudio     towerAudio = null;
+
+    private event Action<Tower>               OnDestroyed = null;
     
-    protected IShootType _Shoot_Type;
-    
-    private event Action<Tower> _On_Destroyed;
-    
-    private float _Last_Fire;
+    #region IShootType
 
-    private bool _Is_Active;
+    protected IShootType shootType = null;
 
-    public Transform Target { get; set; }
-    public int Level => _Config.Level;
-    public Tower NextTower => _Config.NextTower;
-    public bool IsMaxLevel => _Config.IsMaxLevel;
+    #endregion
     
-    public PlayerCell Cell { get; private set; }
+    private float                             lastFire = 0;
+
+    private bool                              isActive = true;
+    
+    public int                                Level => config.Level;
+    
+    public Tower                              NextTower => config.NextTower;
+    
+    public bool                               IsMaxLevel => config.IsMaxLevel;
+
+    public Transform Target
+    {
+        get;
+        set;
+    }
+
+    public PlayerCell Cell
+    {
+        get; 
+        private set;
+    }
 
     protected abstract void Shoot();
     
-    public virtual void Init(Action<Tower> _action, List<Projectile> _pool, Transform _pool_Transform) => _On_Destroyed += _action;
-    
-    protected virtual void ShootEffect() { }
+    public virtual void Init(Action<Tower> _action, List<Projectile> _pool, Transform _pool_Transform) => OnDestroyed += _action;
 
-    private void Awake() => GameEvents._On_Player_Defeated += Deactivate;
+    protected virtual void ShootEffect()
+    {
+    }
+
+    private void Awake() => GameEvents.OnPlayerDefeated += Deactivate;
 
     private void Start()
     {
@@ -57,9 +73,9 @@ public abstract class Tower : MonoBehaviour
     
     private IEnumerator Working()
     {
-        _Is_Active = true;
+        isActive = true;
         
-        while (_Is_Active)
+        while (isActive)
         {
             RotateHead();
 
@@ -72,46 +88,50 @@ public abstract class Tower : MonoBehaviour
     private void RotateHead()
     {
         if (!Target)
+        {
             return;
+        }
         
-        _Head.localRotation = Quaternion.RotateTowards(_Head.localRotation,
-            Quaternion.LookRotation(Target.position - _Head.position),
-            10 * Time.deltaTime * _Rotation_Speed);
+        head.localRotation = Quaternion.RotateTowards(head.localRotation,
+            Quaternion.LookRotation(Target.position - head.position),
+            10 * Time.deltaTime * rotationSpeed);
         
-        _Head.localRotation = Quaternion.Euler(0, _Head.eulerAngles.y, 0);
+        head.localRotation = Quaternion.Euler(0, head.eulerAngles.y, 0);
     }
     
     public void OccupiedCell(PlayerCell _cell) => Cell = _cell;
     
     protected bool ShootCooldown()
     {
-        if(Time.time < _Last_Fire)
+        if (Time.time < lastFire)
+        {
             return false;
-
-        _Last_Fire = Time.time + 1f / _Fire_Rate;
+        }
+        
+        lastFire = Time.time + 1f / fireRate;
 
         return true;
     }
     
     private void AppearanceEffect()
     {
-        transform.DOShakeScale(_Shake_Scale._Duration,
-            _Shake_Scale._Strenghth,
-            _Shake_Scale._Vibrato,
-            _Shake_Scale._Randomness,
-            _Shake_Scale._Fade_Out).SetLink(gameObject);
+        transform.DOShakeScale(shakeScale.duration,
+            shakeScale.strength,
+            shakeScale.vibrato,
+            shakeScale.randomness,
+            shakeScale.fadeOut).SetLink(gameObject);
         
-        _Appearance_Particle.gameObject.SetActive(true);
-        _Appearance_Particle.transform.SetParent(null);
+        appearanceParticles.gameObject.SetActive(true);
+        appearanceParticles.transform.SetParent(null);
     }
 
     public void Deactivate()
     {
-        _Head.localRotation = Quaternion.Euler(Vector3.zero);
-        _Is_Active = false;
+        head.localRotation = Quaternion.Euler(Vector3.zero);
+        isActive = false;
     }
 
-    public void DestroyTower() => _On_Destroyed?.Invoke(this);
+    public void DestroyTower() => OnDestroyed?.Invoke(this);
     
-    private void OnDestroy() => GameEvents._On_Player_Defeated -= Deactivate;
+    private void OnDestroy() => GameEvents.OnPlayerDefeated -= Deactivate;
 }

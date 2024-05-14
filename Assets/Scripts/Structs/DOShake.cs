@@ -1,13 +1,14 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public struct DOShake
 {
-    public float _Duration;
-    public Vector3 _Strenghth;
-    public int _Vibrato;
-    public float _Randomness;
-    public bool _Fade_Out;
+    public float     duration;
+    public Vector3   strength;
+    public int       vibrato;
+    public float     randomness;
+    public bool      fadeOut;
 
 }

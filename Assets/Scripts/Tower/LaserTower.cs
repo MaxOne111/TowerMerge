@@ -2,26 +2,29 @@
 
 public class LaserTower : Tower
 {
-    [SerializeField] private LineRenderer _Line_Renderer;
+    [SerializeField] private LineRenderer lineRenderer = null;
     
     protected override void Shoot()
     {
-        _Shoot_Type = new ShootLaser(_Shoot_Point, Target, _Line_Renderer, _Damage);
+        shootType = new ShootLaser(shootPoint, Target, lineRenderer, damage);
         
-        _Shoot_Type.CreateProjectile();
+        shootType.CreateProjectile();
 
         if (!ShootCooldown() || !Target)
+        {
             return;
+        }
 
         if (!Target)
-            _Tower_Audio.StopPlaying();
-
-        _Shoot_Type.Shoot();
-
-        if (!_Tower_Audio.IsPlaying())
         {
-            _Tower_Audio.PlayShootSound();
+            towerAudio.StopPlaying();
         }
-            
+        
+        shootType.Shoot();
+
+        if (!towerAudio.IsPlaying())
+        {
+            towerAudio.PlayShootSound();
+        }
     }
 }

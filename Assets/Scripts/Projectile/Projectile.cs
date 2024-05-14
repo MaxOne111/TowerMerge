@@ -1,45 +1,47 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float _Movement_Speed;
+    [SerializeField] private float           movementSpeed = 7.5f;
 
-    [SerializeField] private TrailRenderer _Trail;
+    [SerializeField] private TrailRenderer   trail = null;
 
-    private Action<Projectile> _On_Collided;
+    private event Action<Projectile>         OnCollided = null;
 
-    private float _Damage;
+    private float                            damage = 0;
 
-    private Transform _Transform;
+    private Transform                        _transform = null;
 
-    private Vector3 _Direction;
+    private Vector3                          direction;
     
     private void Awake()
     {
-        _Transform = transform;
+        _transform = transform;
 
-        _Direction = Vector3.forward;
+        direction = Vector3.forward;
     }
 
     public void Init(Action<Projectile> _action, float _damage)
     {
-        _On_Collided += _action;
-        _Damage = _damage;
+        OnCollided += _action;
+        
+        damage = _damage;
 
         StartCoroutine(Move());
         
-        _Trail.gameObject.SetActive(true);
+        trail.gameObject.SetActive(true);
     }
     
     private IEnumerator Move()
     {
-        float _movement_Speed = _Movement_Speed;
+        float _movement_Speed = movementSpeed;
         
         while (true)
         {
-            _Transform.Translate(_Direction * _movement_Speed * Time.deltaTime);
+            _transform.Translate(direction * _movement_Speed * Time.deltaTime);
 
             yield return null;
         }
@@ -50,18 +52,21 @@ public class Projectile : MonoBehaviour
     {
         if (other.TryGetComponent(out Enemy _enemy))
         {
-            _enemy.TakeDamage(_Damage);
-            _On_Collided?.Invoke(this);
+            _enemy.TakeDamage(damage);
+            OnCollided?.Invoke(this);
         }
-        
+
         if (other.CompareTag("Border"))
-            _On_Collided?.Invoke(this);
+        {
+            OnCollided?.Invoke(this);
+        }
+            
     }
 
     private void OnDisable()
     {
-        _On_Collided = null;
+        OnCollided = null;
         
-        _Trail.gameObject.SetActive(false);
+        trail.gameObject.SetActive(false);
     }
 }

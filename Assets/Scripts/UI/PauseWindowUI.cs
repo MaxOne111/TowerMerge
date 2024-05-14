@@ -2,16 +2,18 @@
 using Doozy.Runtime.Reactor.Animators;
 using Doozy.Runtime.UIManager.Components;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PauseWindowUI : MonoBehaviour
 {
-    [SerializeField] private UIButton _Play;
-    [SerializeField] private UIButton _Quit_Button;
+    [SerializeField] private UIButton     play = null;
+    [SerializeField] private UIButton     quitButton = null;
     
-    [SerializeField] private UIAnimator _Animator;
+    [SerializeField] private UIAnimator   animator = null;
 
-    public void PlayAnimation(PlayDirection _direction) => _Animator.Play(_direction);
+    public void PlayAnimation(PlayDirection _direction) => animator.Play(_direction);
 
-    public UIButton GetPlayButton => _Play;
-    public UIButton GetQuitButton => _Quit_Button;
+    public UIButton GetPlayButton => play;
+    
+    public UIButton GetQuitButton => quitButton;
 }
