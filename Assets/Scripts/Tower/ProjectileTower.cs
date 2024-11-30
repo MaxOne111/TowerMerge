@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ProjectileTower : Tower
 {
@@ -26,7 +25,12 @@ public class ProjectileTower : Tower
     
     protected override void Shoot()
     {
-        if (!ShootCooldown() || !Target)
+        if (!Target)
+        {
+            return;
+        }
+
+        if (!ShootCooldown() || !IsEnemyClosely())
         {
             return;
         }

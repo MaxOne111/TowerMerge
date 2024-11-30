@@ -590,7 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27eef5444fb40aaa6934b1293cae439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 100
+  startHealth: 75
   movementSpeed: 1
   damageParticle: {fileID: 5261912599532726285}
   deathParticle: {fileID: 4129698365148231979}

@@ -1230,6 +1230,7 @@ MonoBehaviour:
   damage: 10
   fireRate: 3
   rotationSpeed: 15
+  distanceToTarget: 6.5
   shootPoint: {fileID: 6831029712661022028}
   muzzle: {fileID: 2151028510758436719}
   head: {fileID: 1964862975897918621}

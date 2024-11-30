@@ -11,6 +11,7 @@ public abstract class Tower : MonoBehaviour
     [SerializeField] protected float          damage = 10f;
     [SerializeField] private float            fireRate = 1f;
     [SerializeField] private float            rotationSpeed = 15f;
+    [SerializeField] private float            distanceToTarget = 5f;
     
     [SerializeField] protected Transform      shootPoint = null;
     [SerializeField] protected Transform      muzzle = null;
@@ -30,6 +31,10 @@ public abstract class Tower : MonoBehaviour
 
     #endregion
     
+    private Transform                         _transform = null;
+    
+    private float                             currentDisacance = 0f;
+
     private float                             lastFire = 0;
 
     private bool                              isActive = true;
@@ -60,7 +65,12 @@ public abstract class Tower : MonoBehaviour
     {
     }
 
-    private void Awake() => GameEvents.OnPlayerDefeated += Deactivate;
+    private void Awake()
+    {
+        GameEvents.OnPlayerDefeated += Deactivate;
+
+        _transform = transform;
+    }
 
     private void Start()
     {
@@ -84,10 +94,22 @@ public abstract class Tower : MonoBehaviour
             yield return null;
         }
     }
+
+    protected bool IsEnemyClosely()
+    {
+        currentDisacance = Vector3.Distance(_transform.position, Target.position);
+        
+        if (currentDisacance > distanceToTarget)
+        {
+            return false;
+        }
+        
+        return true;
+    }
     
     private void RotateHead()
     {
-        if (!Target)
+        if (!Target || !IsEnemyClosely())
         {
             return;
         }

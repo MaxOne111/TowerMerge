@@ -1781,7 +1781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startHealth: 50
-  movementSpeed: 1.25
+  movementSpeed: 1.15
   damageParticle: {fileID: 5840953300311607676}
   deathParticle: {fileID: 3961450466358679277}
 --- !u!114 &-2207416919419192863

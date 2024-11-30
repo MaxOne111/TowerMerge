@@ -6,25 +6,33 @@ public class LaserTower : Tower
     
     protected override void Shoot()
     {
-        shootType = new ShootLaser(shootPoint, Target, lineRenderer, damage);
-        
-        shootType.CreateProjectile();
-
-        if (!ShootCooldown() || !Target)
-        {
-            return;
-        }
-
         if (!Target)
         {
             towerAudio.StopPlaying();
+            
+            return;
         }
         
-        shootType.Shoot();
-
+        if (!IsEnemyClosely())
+        {
+            return;
+        }
+        
+        shootType = new ShootLaser(shootPoint, Target, lineRenderer, damage);
+        
+        shootType.CreateProjectile();
+        
         if (!towerAudio.IsPlaying())
         {
             towerAudio.PlayShootSound();
         }
+        
+        if (!ShootCooldown())
+        {
+            return;
+        }
+        
+        shootType.Shoot();
+        
     }
 }

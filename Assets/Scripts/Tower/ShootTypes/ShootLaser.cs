@@ -45,16 +45,21 @@ public class ShootLaser : IShootType
     {
         if (!target)
         {
-            lineRenderer.SetPosition(0, zeroPosition);
-            lineRenderer.SetPosition(1, zeroPosition);
+            ResetLaser();
+            
             return;
         }
-            
         
         Vector3 _target = new Vector3(target.transform.position.x, target.transform.position.y + 0.35f,
             target.transform.position.z);
 
         lineRenderer.SetPosition(0, shootPoint.position);
         lineRenderer.SetPosition(1, _target);
+    }
+
+    public void ResetLaser()
+    {
+        lineRenderer.SetPosition(0, zeroPosition);
+        lineRenderer.SetPosition(1, zeroPosition);
     }
 }
